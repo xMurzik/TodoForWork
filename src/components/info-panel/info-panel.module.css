@@ -1,0 +1,43 @@
+.containerPanel {
+  padding: 0 10px 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  border: 1px solid rgba(128, 128, 128, 0.295);
+  margin-top: -1px;
+  height: 30px;
+}
+
+.sortOptions {
+  display: flex;
+  gap: 10px;
+  font-size: 1.6rem;
+}
+
+.spanSort {
+  padding: 0 10px 0 10px;
+  border-radius: 5px;
+  text-align: center;
+  transition: all 300ms ease;
+  color: grey;
+}
+
+.spanSort:hover {
+  cursor: pointer;
+  color: black;
+}
+
+.itemsLeft {
+  color: grey;
+}
+
+.clearCompleted {
+  color: grey;
+  transition: all 300ms ease;
+}
+
+.clearCompleted:hover {
+  cursor: pointer;
+  color: black;
+}
