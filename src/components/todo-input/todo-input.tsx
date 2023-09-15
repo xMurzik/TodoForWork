@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Input } from 'antd';
 import { AiOutlineDown } from 'react-icons/ai';
 import { v4 } from 'uuid';
-import { ITodo } from '../../types';
+import { TodosContext } from '../../store/TodosListProvider';
 import s from './todo-inputs.module.css';
 
-interface ITodoInputProps {
-  setListVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
-}
+const TodoInput: React.FC = () => {
+  const TodosData = useContext(TodosContext);
 
-const TodoInput: React.FC<ITodoInputProps> = ({ setListVisible, setTodos }) => {
   const [value, setValue] = useState<string>('');
 
   const onClickEnter = () => {
-    setTodos((prev) => [...prev, { id: v4(), isReady: false, value: value }]);
-    setValue('');
+    if (value) {
+      TodosData.setTodos((prev) => [
+        ...prev,
+        { id: v4(), isReady: false, value: value },
+      ]);
+      setValue('');
+    }
   };
 
   return (
@@ -30,7 +32,7 @@ const TodoInput: React.FC<ITodoInputProps> = ({ setListVisible, setTodos }) => {
       />
       <AiOutlineDown
         className={s.icon}
-        onClick={() => setListVisible((val) => !val)}
+        onClick={() => TodosData.setListVisible((val) => !val)}
       />
     </div>
   );

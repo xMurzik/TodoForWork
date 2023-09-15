@@ -1,50 +1,53 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useContext } from 'react';
 import { Transition } from 'react-transition-group';
 import OneTodo from '../one-todo/one-todo';
 import InfoPanel from '../info-panel/info-panel';
 import EmptyTodos from '../empty-todos/empty-todos';
-import { ITodo, TFilterType } from '../../types';
+import { TFilterType } from '../../types';
+import { TodosContext } from '../../store/TodosListProvider';
 import s from './drop-down-list.module.css';
 
-interface IDropDownListProps {
-  listVisible: boolean;
-  todos: Array<ITodo>;
-  setTodos: React.Dispatch<React.SetStateAction<ITodo[]>>;
-}
-
-const DropDownList: React.FC<IDropDownListProps> = ({
-  setTodos,
-  listVisible,
-  todos,
-}) => {
+const DropDownList: React.FC = () => {
+  const TodosData = useContext(TodosContext);
   const [currentFilter, setCurrentFilter] = useState<TFilterType>('All');
 
   const todosToRender = useMemo(() => {
     switch (currentFilter) {
       case 'All':
-        return todos;
+        return TodosData.todos;
       case 'Active':
-        return todos.filter((el) => !el.isReady);
+        return TodosData.todos.filter((el) => !el.isReady);
       case 'Complited':
-        return todos.filter((el) => el.isReady);
+        return TodosData.todos.filter((el) => el.isReady);
     }
-  }, [currentFilter, todos]);
+  }, [currentFilter, TodosData.todos]);
 
   return (
-    <Transition in={listVisible} timeout={600} unmountOnExit mountOnEnter>
+    <Transition
+      in={TodosData.listVisible}
+      timeout={600}
+      unmountOnExit
+      mountOnEnter
+    >
       {(state) => (
-        <div className={`${s[`${state}`]}`}>
-          {todosToRender.map((el) => (
-            <OneTodo key={el.id} setTodos={setTodos} {...el} />
-          ))}
-          {!todosToRender.length && <EmptyTodos />}
+        <>
+          <div
+            style={{ overflowY: todosToRender.length > 8 ? 'scroll' : 'unset' }}
+            className={`${s.containerListTodos} ${s[`${state}`]}`}
+          >
+            {todosToRender.map((el) => (
+              <OneTodo setTodos={TodosData.setTodos} {...el} />
+            ))}
+
+            {!todosToRender.length && <EmptyTodos />}
+          </div>
           <InfoPanel
             currentFilter={currentFilter}
             setCurrentFilter={setCurrentFilter}
-            setTodos={setTodos}
-            todos={todos}
+            setTodos={TodosData.setTodos}
+            todos={TodosData.todos}
           />
-        </div>
+        </>
       )}
     </Transition>
   );

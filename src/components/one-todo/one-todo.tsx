@@ -15,7 +15,7 @@ const OneTodo: React.FC<IOneTodoProps> = ({ id, isReady, value, setTodos }) => {
   };
 
   return (
-    <div className={s.containerTodo}>
+    <div className={`${s.containerTodo}`}>
       {isReady ? (
         <BiCheckCircle onClick={onClickIconChangeStatus} className={s.icons} />
       ) : (
